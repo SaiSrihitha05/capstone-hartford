@@ -1,0 +1,114 @@
+<section class="min-h-screen bg-[#f5f2ef] flex items-center pt-16">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="space-y-4">
+
+        <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-[#75013f] leading-tight">
+          Protect What <span class="text-[#fe3082]"> Matters </span> Most
+        </h1>
+        <p class="text-gray-600 text-lg leading-relaxed">
+          The Hartford provides comprehensive insurance solutions tailored to secure your family's future. 
+          We've got you covered every step of the way.
+        </p>
+        <div class="flex flex-wrap gap-4">
+
+          <a href="#about" class="px-8 py-3 bg-[#75013f] text-white rounded-lg font-semibold hover:bg-[#fe3082] transition-all shadow-lg">
+            Learn More
+          </a>
+        </div>
+      </div>
+      <div class="flex justify-center">
+        <img src="Screenshot_2026-01-08_165409-removebg-preview.png" class="max-w-full h-auto" alt="Hartford Shield">
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mt-16">
+      <div *ngFor="let stat of stats" class="text-center p-6 bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow">
+        <p class="text-3xl font-bold text-[#75013f]">{{ stat.value }}</p>
+        <p class="text-gray-500 mt-1">{{ stat.label }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="about" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+      <div class="relative">
+        <div class="bg-[#75013f] rounded-3xl p-8 text-white space-y-6">
+          <h3 class="text-2xl font-bold">Our Mission</h3>
+          <p class="text-white/80 leading-relaxed">To provide families with accessible, affordable coverage that gives them confidence to live life fully.</p>
+          <div class="space-y-4">
+            <p>✓ Licensed in all 50 states</p>
+            <p>✓ A+ Financial Strength Rating</p>
+            <p>✓ Award winning customer service</p>
+          </div>
+        </div>
+      </div>
+      <div class="space-y-6">
+        <h2 class="text-3xl sm:text-4xl font-bold text-[#75013f]">More Than Just Insurance</h2>
+        <p class="text-gray-600">Founded in 1810, we believe insurance is a promise to stand by you when life takes unexpected turns.</p>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="p-4 bg-[#f5f2ef] rounded-xl text-center">
+            <p class="text-2xl font-bold text-[#75013f]">₹500Cr+</p>
+            <p class="text-gray-500 text-sm">Claims Settled</p>
+          </div>
+          <div class="p-4 bg-[#f5f2ef] rounded-xl text-center">
+            <p class="text-2xl font-bold text-[#75013f]">48hrs</p>
+            <p class="text-gray-500 text-sm">Avg Processing</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="why-us" class="py-20 bg-[#f5f2ef]">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl font-bold text-[#75013f]">The Hartford Difference</h2>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div *ngFor="let card of whyUsCards" class="bg-white rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all">
+        <h3 class="text-xl font-bold text-[#75013f] mb-2">{{ card.title }}</h3>
+        <p class="text-gray-500">{{ card.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="py-20 bg-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl sm:text-4xl font-bold text-[#75013f]">Contact Us</h2>
+    </div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+      <div class="space-y-6">
+        <div class="p-5 bg-[#f5f2ef] rounded-2xl">
+          <h4 class="font-semibold text-[#75013f]">Visit Us</h4>
+          <p class="text-gray-500">One Hartford Plaza, Hartford, CT 06155</p>
+        </div>
+        <div class="p-5 bg-[#f5f2ef] rounded-2xl">
+          <h4 class="font-semibold text-[#75013f]">Call Us</h4>
+          <p class="text-gray-500">1-860-547-5000</p>
+        </div>
+      </div>
+
+      <div class="bg-[#f5f2ef] rounded-2xl p-8">
+        <div *ngIf="isSubmitted" class="text-center py-8">
+          <h3 class="text-xl font-bold text-[#75013f]">Message Sent!</h3>
+          <button (click)="isSubmitted = false" class="mt-4 text-[#fe3082] font-semibold">Send Another</button>
+        </div>
+
+        <form *ngIf="!isSubmitted" (ngSubmit)="onSubmit()" class="space-y-4">
+          <input [(ngModel)]="name" name="name" placeholder="Full Name" required class="w-full px-4 py-3 rounded-xl border bg-white focus:border-[#75013f] outline-none">
+          <input [(ngModel)]="email" name="email" type="email" placeholder="Email" required class="w-full px-4 py-3 rounded-xl border bg-white focus:border-[#75013f] outline-none">
+          <textarea [(ngModel)]="message" name="message" rows="4" placeholder="Your Message" required class="w-full px-4 py-3 rounded-xl border bg-white focus:border-[#75013f] outline-none"></textarea>
+          <button type="submit" [disabled]="isSubmitting" class="w-full py-3 bg-[#75013f] text-white rounded-xl font-semibold hover:bg-[#fe3082] transition-all">
+            {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

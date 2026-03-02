@@ -1,0 +1,132 @@
+<div class="max-w-4xl mx-auto py-12 px-4 font-lato" *ngIf="policy">
+  <div class="bg-white rounded-[3rem] shadow-2xl border border-gray-100 overflow-hidden">
+
+    <div class="p-10 bg-[#f5f2ef] border-b">
+      <h2 class="text-3xl font-black text-[#75013f]">File a Claim</h2>
+      <p class="text-gray-500 font-bold text-[10px] uppercase tracking-widest mt-1">
+        Policy: {{policy.policyNumber}}
+      </p>
+    </div>
+
+    <div class="p-10 space-y-8">
+
+      <!-- Claim Type + Member -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="space-y-2">
+          <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            Claim Type
+          </label>
+          <select [(ngModel)]="claimData.claimType"
+                  name="claimType"
+                  class="w-full p-4 bg-gray-50 rounded-2xl border-none
+                         outline-none focus:ring-2 focus:ring-[#75013f]/20">
+            <option value="Death">Death Claim</option>
+          </select>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            Claiming For
+          </label>
+          <select [(ngModel)]="claimData.policyMemberId"
+                  name="policyMemberId"
+                  class="w-full p-4 bg-gray-50 rounded-2xl border-none outline-none
+                         focus:ring-2 focus:ring-[#75013f]/20">
+            <option *ngFor="let m of policy.members" [value]="m.id">
+              {{m.memberName}} ({{m.relationshipToCustomer}})
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Death Claim Fields -->
+      <div *ngIf="claimData.claimType === 'Death'"
+           class="grid grid-cols-1 md:grid-cols-2 gap-8
+                  animate-in slide-in-from-top duration-300">
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            Death Certificate Number
+          </label>
+          <input [(ngModel)]="claimData.deathCertificateNumber"
+                 name="deathCertificateNumber"
+                 type="text"
+                 placeholder="Enter certificate number"
+                 class="w-full p-4 bg-gray-50 rounded-2xl border-none
+                        outline-none focus:ring-2 focus:ring-[#75013f]/20"/>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            Nominee Name
+          </label>
+          <input [(ngModel)]="claimData.nomineeName"
+                 name="nomineeName"
+                 type="text"
+                 placeholder="Enter nominee name"
+                 class="w-full p-4 bg-gray-50 rounded-2xl border-none
+                        outline-none focus:ring-2 focus:ring-[#75013f]/20"/>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            Nominee Contact
+          </label>
+          <input [(ngModel)]="claimData.nomineeContact"
+                 name="nomineeContact"
+                 type="tel"
+                 placeholder="Enter nominee contact number"
+                 class="w-full p-4 bg-gray-50 rounded-2xl border-none
+                        outline-none focus:ring-2 focus:ring-[#75013f]/20"/>
+        </div>
+
+        <div class="space-y-2">
+          <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+            Remarks
+          </label>
+          <input [(ngModel)]="claimData.remarks"
+                 name="remarks"
+                 type="text"
+                 placeholder="Any additional remarks"
+                 class="w-full p-4 bg-gray-50 rounded-2xl border-none
+                        outline-none focus:ring-2 focus:ring-[#75013f]/20"/>
+        </div>
+      </div>
+
+      <!-- Document Upload -->
+      <div class="space-y-4">
+        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+          Supporting Documents (PDF/JPG)
+        </label>
+        <div class="border-2 border-dashed border-gray-200 rounded-[2rem] p-10
+                    text-center hover:border-[#75013f] transition-all relative">
+          <input type="file"
+                 (change)="onFileSelect($event)"
+                 multiple
+                 class="absolute inset-0 opacity-0 cursor-pointer"/>
+          <p class="text-gray-400 font-bold">
+            Click to upload documents (Death Certificate, etc.)
+          </p>
+          <p class="text-[10px] text-gray-300 mt-2">
+            {{selectedFiles.length}} file(s) selected
+          </p>
+          <div *ngIf="selectedFiles.length > 0" class="mt-4 space-y-1">
+            <p *ngFor="let f of selectedFiles"
+               class="text-[10px] text-[#75013f] font-bold">
+              📄 {{f.name}}
+            </p>
+          </div>
+        </div>
+      </div>
+      
+
+      <button (click)="submitClaim()"
+              class="w-full py-5 bg-[#75013f] text-white rounded-3xl font-black
+                     text-xs uppercase tracking-widest shadow-xl
+                     hover:bg-[#3b001f] transition-all">
+        Submit Claim Request
+      </button>
+
+    </div>
+  </div>
+</div>

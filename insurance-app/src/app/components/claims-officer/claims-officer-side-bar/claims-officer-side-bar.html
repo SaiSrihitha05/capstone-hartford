@@ -1,0 +1,28 @@
+<aside class="w-64 min-h-screen bg-white border-r border-gray-200 flex flex-col">
+  <div class="flex-1 py-6 px-4">
+    <nav class="space-y-2">
+      <a *ngFor="let link of navLinks"
+         [routerLink]="link.path"
+         routerLinkActive="bg-[#75013f] text-white"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group hover:bg-[#75013f]/10">
+        
+        <span class="text-xl group-hover:scale-110 transition-transform">
+          {{ link.icon }}
+        </span>
+        
+        <span class="font-lato font-bold text-gray-700 group-hover:text-[#75013f] block">
+          {{ link.label }}
+        </span>
+      </a>
+    </nav>
+  </div>
+
+  <div class="p-4 border-t border-gray-100">
+    <div class="bg-[#f5f2ef] p-4 rounded-2xl">
+      <p class="text-[10px] font-bold text-[#75013f] uppercase tracking-widest mb-1">Role</p>
+      <p class="text-xs font-bold text-gray-800">Claims Officer</p>
+      <p class="text-[9px] text-gray-400 mt-2">Authorized for claim settlement and document verification.</p>
+    </div>
+  </div>
+</aside>

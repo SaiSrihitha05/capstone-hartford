@@ -1,0 +1,20 @@
+<aside class="w-64 min-h-screen bg-white border-r border-gray-200 flex flex-col fixed left-0 top-16 z-50">
+  <div class="flex-1 py-6 px-4">
+    <nav class="space-y-2">
+      <a *ngFor="let link of navLinks"
+         [routerLink]="link.path"
+         routerLinkActive="bg-[#75013f] text-white"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="flex items-center gap-3 px-4 py-3 rounded-xl transition-all group hover:bg-[#75013f]/10">
+        
+        <span class="text-xl group-hover:scale-110 transition-transform">
+            {{ link.icon }}
+        </span>
+        
+        <span class="font-lato font-bold text-gray-700 group-hover:text-[#75013f] block">
+            {{ link.label }}
+        </span>
+      </a>
+    </nav>
+  </div>
+</aside>

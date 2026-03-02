@@ -1,0 +1,102 @@
+<div class="space-y-8 font-lato">
+
+  <!-- Header -->
+  <div class="flex justify-between items-center">
+    <div>
+      <h1 class="text-3xl font-black text-[#75013f]">My Claims</h1>
+      <p class="text-gray-400 text-sm mt-1">Track all your filed insurance claims</p>
+    </div>
+
+  </div>
+
+  <!-- Loading -->
+  <div *ngIf="loading" class="py-20 text-center">
+    <p class="text-gray-400 font-bold animate-pulse">Loading claims...</p>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && claims.length === 0"
+       class="py-20 text-center bg-white rounded-[3rem]
+              border border-gray-100 shadow-sm">
+    <p class="text-5xl mb-4">📋</p>
+    <p class="text-gray-500 font-bold text-lg">No claims filed yet</p>
+    <p class="text-gray-400 text-sm mt-1">
+      File a claim from any of your active policies
+    </p>
+    <button routerLink="/customer-dashboard/my-policies"
+            class="mt-6 px-8 py-3 bg-[#75013f] text-white rounded-xl
+                   font-bold text-xs uppercase tracking-widest
+                   hover:bg-[#3b001f] transition-all">
+      View My Policies
+    </button>
+  </div>
+
+  <!-- Claims Table -->
+  <div *ngIf="!loading && claims.length > 0"
+       class="bg-white rounded-[3rem] shadow-sm border border-gray-100 overflow-hidden">
+    <table class="w-full text-left">
+      <thead class="bg-gray-50 text-[10px] font-black uppercase
+                    text-gray-400 border-b">
+        <tr>
+          <th class="px-8 py-5">Claim ID & Date</th>
+          <th class="px-8 py-5">Policy</th>
+          <th class="px-8 py-5">Member</th>
+          <th class="px-8 py-5">Type</th>
+          <th class="px-8 py-5">Status</th>
+          <th class="px-8 py-5 text-right">Claim Amount</th>
+          <th class="px-8 py-5 text-right">Settlement</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <tr *ngFor="let claim of claims"
+            class="hover:bg-gray-50 transition-all">
+
+          <td class="px-8 py-6">
+            <p class="font-bold text-gray-700">#{{claim.id}}</p>
+            <p class="text-[9px] text-gray-400">
+              {{claim.filedDate | date:'dd MMM yyyy'}}
+            </p>
+          </td>
+
+          <td class="px-8 py-6 font-medium text-sm">
+            {{claim.policyNumber}}
+          </td>
+
+          <td class="px-8 py-6 text-sm text-gray-600">
+            {{claim.policyMemberName}}
+          </td>
+
+          <td class="px-8 py-6">
+            <span class="px-3 py-1 bg-gray-100 rounded-lg
+                         text-[10px] font-bold uppercase">
+              {{claim.claimType}}
+            </span>
+          </td>
+
+          <td class="px-8 py-6">
+            <span [ngClass]="getStatusBadgeClass(claim.status)"
+                  class="px-4 py-1 rounded-full text-[9px]
+                         font-black text-white uppercase shadow-sm">
+              {{claim.status}}
+            </span>
+          </td>
+
+          <td class="px-8 py-6 text-right font-black text-[#75013f]">
+            ₹{{claim.claimAmount | number}}
+          </td>
+
+          <td class="px-8 py-6 text-right font-bold text-green-600">
+            <span *ngIf="claim.settlementAmount">
+              ₹{{claim.settlementAmount | number}}
+            </span>
+            <span *ngIf="!claim.settlementAmount" class="text-gray-300">
+              —
+            </span>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>

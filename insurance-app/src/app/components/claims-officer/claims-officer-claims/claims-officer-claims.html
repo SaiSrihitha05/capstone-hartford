@@ -1,0 +1,192 @@
+<!-- Claims Table -->
+<div class="space-y-8 font-lato">
+  <h1 class="text-3xl font-black text-[#75013f]">Assigned Claims</h1>
+
+  <div *ngIf="loading" class="py-20 text-center">
+    <p class="text-gray-400 animate-pulse font-bold">Loading claims...</p>
+  </div>
+
+  <div *ngIf="!loading && claims.length === 0"
+       class="py-20 text-center bg-white rounded-[3rem] border border-gray-100">
+    <p class="text-4xl mb-4">📋</p>
+    <p class="text-gray-400 font-bold">No claims assigned yet</p>
+  </div>
+
+  <div *ngIf="!loading && claims.length > 0"
+       class="bg-white rounded-[3rem] shadow-sm border border-gray-100 overflow-hidden">
+    <table class="w-full text-left">
+      <thead class="bg-gray-50 text-[10px] font-black uppercase text-gray-400 border-b">
+        <tr>
+          <th class="px-8 py-5">Claim ID</th>
+          <th class="px-8 py-5">Policy</th>
+          <th class="px-8 py-5">Member</th>
+          <th class="px-8 py-5">Type</th>
+          <th class="px-8 py-5">Claim Amount</th>
+          <th class="px-8 py-5">Filed Date</th>
+          <th class="px-8 py-5">Status</th>
+          <th class="px-8 py-5">Action</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <tr *ngFor="let claim of claims" class="hover:bg-gray-50 transition-all">
+
+          <td class="px-8 py-6 font-bold text-gray-700">#{{claim.id}}</td>
+
+          <td class="px-8 py-6 text-sm">{{claim.policyNumber}}</td>
+
+          <td class="px-8 py-6 text-sm text-gray-600">
+            {{claim.policyMemberName}}
+          </td>
+
+          <td class="px-8 py-6">
+            <span class="px-3 py-1 bg-gray-100 rounded-lg
+                         text-[10px] font-bold uppercase">
+              {{claim.claimType}}
+            </span>
+          </td>
+
+          <td class="px-8 py-6 font-black text-[#75013f]">
+            ₹{{claim.claimAmount | number}}
+          </td>
+
+          <td class="px-8 py-6 text-sm text-gray-500">
+            {{claim.filedDate | date:'dd MMM yyyy'}}
+          </td>
+
+          <td class="px-8 py-6">
+            <span [ngClass]="getStatusBadgeClass(claim.status)"
+                  class="px-4 py-1 rounded-full text-[9px]
+                         font-black text-white uppercase">
+              {{claim.status}}
+            </span>
+          </td>
+
+          <td class="px-8 py-6">
+            <button *ngIf="canProcess(claim)"
+                    (click)="openProcessModal(claim)"
+                    class="px-4 py-2 bg-[#75013f] text-white rounded-xl
+                           font-bold text-[10px] uppercase hover:bg-[#3b001f]
+                           transition-all">
+              Process
+            </button>
+            <span *ngIf="!canProcess(claim)"
+                  class="text-gray-300 text-xs font-bold">
+              —
+            </span>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Process Claim Modal -->
+<div *ngIf="showProcessModal && selectedClaim"
+     class="fixed inset-0 z-50 flex items-center justify-center
+            bg-[#3b001f]/80 backdrop-blur-md p-4">
+  <div class="bg-white w-full max-w-lg rounded-[3rem] shadow-2xl overflow-hidden">
+
+    <!-- Header -->
+    <div class="p-8 bg-[#f5f2ef] border-b flex justify-between items-start">
+      <div>
+        <h3 class="text-2xl font-black text-[#75013f]">Process Claim</h3>
+        <p class="text-gray-400 text-xs font-bold mt-1">
+          Claim #{{selectedClaim.id}} —
+          {{selectedClaim.policyNumber}}
+        </p>
+      </div>
+      <button (click)="closeModal()"
+              class="w-10 h-10 rounded-full bg-white shadow-sm flex items-center
+                     justify-center text-gray-400 hover:text-red-500
+                     transition-all text-2xl">
+        &times;
+      </button>
+    </div>
+
+    <!-- Claim Summary -->
+    <div class="px-8 pt-6 grid grid-cols-2 gap-4">
+      <div class="p-4 bg-gray-50 rounded-2xl">
+        <p class="text-[10px] font-black text-gray-400 uppercase">Member</p>
+        <p class="font-bold text-gray-700 text-sm mt-1">
+          {{selectedClaim.policyMemberName}}
+        </p>
+      </div>
+      <div class="p-4 bg-gray-50 rounded-2xl">
+        <p class="text-[10px] font-black text-gray-400 uppercase">Claim Amount</p>
+        <p class="font-black text-[#75013f] text-sm mt-1">
+          ₹{{selectedClaim.claimAmount | number}}
+        </p>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="p-8 space-y-6">
+
+      <!-- Status -->
+      <div class="space-y-2">
+        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+          Decision
+        </label>
+<select [(ngModel)]="processForm.status"
+        name="status"
+        class="w-full p-4 bg-gray-50 rounded-2xl border-none
+               outline-none focus:ring-2 focus:ring-[#75013f]/20">
+  <option value="Approved">✓ Approve Claim</option>
+  <option value="Rejected">✕ Reject Claim</option>
+</select>
+      </div>
+
+<!-- Settlement Amount — only for Approved -->
+<div *ngIf="processForm.status === 'Approved'" class="space-y-2">
+  <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+    Settlement Amount (₹) <span class="text-red-400">*</span>
+  </label>
+  <input [(ngModel)]="processForm.settlementAmount"
+         name="settlementAmount"
+         type="number"
+         [max]="selectedClaim.claimAmount"
+         placeholder="Enter settlement amount"
+         class="w-full p-4 bg-gray-50 rounded-2xl border-none
+                outline-none focus:ring-2 focus:ring-[#75013f]/20"/>
+  <p class="text-[10px] text-gray-400">
+    Max: ₹{{selectedClaim.claimAmount | number}}
+  </p>
+</div>
+
+      <!-- Remarks -->
+      <div class="space-y-2">
+        <label class="text-[10px] font-black text-gray-400 uppercase tracking-widest">
+          Remarks <span class="text-red-400">*</span>
+        </label>
+        <textarea [(ngModel)]="processForm.remarks"
+                  name="remarks"
+                  rows="3"
+                  placeholder="Enter your remarks..."
+                  class="w-full p-4 bg-gray-50 rounded-2xl border-none
+                         outline-none focus:ring-2 focus:ring-[#75013f]/20
+                         resize-none">
+        </textarea>
+      </div>
+
+      <!-- Buttons -->
+      <div class="flex gap-4">
+        <button (click)="closeModal()"
+                class="flex-1 py-4 border-2 border-gray-200 text-gray-500
+                       rounded-2xl font-bold text-sm hover:bg-gray-50
+                       transition-all">
+          Cancel
+        </button>
+<button (click)="submitProcess()"
+        [class]="processForm.status === 'Approved'
+          ? 'bg-green-600 hover:bg-green-700'
+          : 'bg-red-500 hover:bg-red-600'"
+        class="flex-1 py-4 text-white rounded-2xl font-black
+               text-sm transition-all shadow-lg">
+  {{ processForm.status === 'Approved' ? '✓ Approve Claim' : '✕ Reject Claim' }}
+</button>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -1,0 +1,44 @@
+<section class="min-h-screen bg-[#f5f2ef] flex items-center justify-center px-4 py-12">
+  <div class="max-w-lg w-full bg-white rounded-2xl shadow-xl p-8">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-bold text-[#75013f]">Join The Hartford</h2>
+      <p class="text-gray-500 mt-2">Start protecting what matters most today</p>
+    </div>
+
+    <form (ngSubmit)="onRegister()" class="space-y-4">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+        <label class="block text-[#75013f] font-semibold mb-1">Full Name</label>
+        <input type="text" name="name" [(ngModel)]="name" placeholder="John Doe" 
+                class="w-full px-4 py-3 rounded-xl border border-gray-200">
+        </div>
+        <div>
+        <label class="block text-[#75013f] font-semibold mb-1">Phone</label>
+        <input type="tel" name="phone" [(ngModel)]="phone" placeholder="+91..." 
+                class="w-full px-4 py-3 rounded-xl border border-gray-200">
+        </div>
+    </div>
+
+    <div>
+        <label class="block text-[#75013f] font-semibold mb-1">Email</label>
+        <input type="email" name="email" [(ngModel)]="email" placeholder="email@example.com" 
+            class="w-full px-4 py-3 rounded-xl border border-gray-200">
+    </div>
+
+    <div>
+        <label class="block text-[#75013f] font-semibold mb-1">Password</label>
+        <input type="password" name="password" [(ngModel)]="password" placeholder="••••••••" 
+            class="w-full px-4 py-3 rounded-xl border border-gray-200">
+    </div>
+
+    <button type="submit" class="w-full py-3 bg-[#75013f] text-white rounded-xl font-bold hover:bg-[#fe3082]">
+        Create Account
+    </button>
+    </form>
+
+    <p class="text-center mt-6 text-gray-600">
+      Already a member? 
+      <a routerLink="/login" class="text-[#fe3082] font-bold hover:underline">Log In</a>
+    </p>
+  </div>
+</section>

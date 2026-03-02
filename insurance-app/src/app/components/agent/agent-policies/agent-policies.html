@@ -1,0 +1,85 @@
+<div class="p-6 font-lato">
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-[#75013f]">Assigned Policy Verifications</h1>
+    <p class="text-gray-500 text-sm">Review documents and update policy status for your assigned customers</p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <table class="w-full text-left">
+      <thead class="bg-gray-50 border-b">
+        <tr class="text-[#75013f] text-xs font-bold uppercase">
+          <th class="px-6 py-4">Policy / Customer</th>
+          <th class="px-6 py-4">Premium</th>
+          <th class="px-6 py-4">Current Status</th>
+          <th class="px-6 py-4">Verification</th>
+          <th class="px-6 py-4 text-right">Update Status</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <tr *ngFor="let policy of policies" class="hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-4">
+            <p class="font-bold text-gray-800">{{ policy.policyNumber }}</p>
+            <p class="text-xs text-gray-400">{{ policy.customerName }}</p>
+          </td>
+          <td class="px-6 py-4">
+            <p class="font-semibold">₹{{ policy.totalPremiumAmount | number }}</p>
+            <p class="text-[10px] text-gray-400 uppercase">{{ policy.premiumFrequency }}</p>
+          </td>
+          <td class="px-6 py-4">
+            <span [class]="'px-2 py-1 rounded text-[10px] font-bold ' + 
+              (policy.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700')">
+              {{ policy.status }}
+            </span>
+          </td>
+          <td class="px-6 py-4">
+            <button (click)="viewPolicyDetails(policy)" class="text-[#75013f] text-xs font-bold hover:underline">
+              View Documents & Members
+            </button>
+          </td>
+          <td class="px-6 py-4 text-right">
+            <select (change)="onUpdateStatus(policy.id, $event)" 
+                    class="text-xs p-2 border rounded-lg bg-white outline-none focus:border-[#fe3082]">
+              <option value="" disabled selected>Change Status...</option>
+              <option *ngFor="let opt of statusOptions" [value]="opt">{{ opt }}</option>
+            </select>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="showDetailsModal && selectedPolicy" class="fixed inset-0 z-[70] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+    <div class="bg-white w-full max-w-4xl rounded-3xl shadow-2xl p-8 max-h-[85vh] overflow-y-auto">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-xl font-bold text-[#75013f]">Policy Verification: {{ selectedPolicy.policyNumber }}</h2>
+        <button (click)="showDetailsModal = false" class="text-gray-400 text-2xl">&times;</button>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Insured Members</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div *ngFor="let member of selectedPolicy.members" class="p-4 bg-[#f5f2ef] rounded-xl border border-gray-100">
+            <p class="font-bold">{{ member.memberName }} ({{ member.relationshipToCustomer }})</p>
+            <p class="text-xs text-gray-500">Gender: {{ member.gender }} | Occ: {{ member.occupation }}</p>
+            <p class="text-sm font-bold text-[#75013f] mt-1">Coverage: ₹{{ member.coverageAmount | number }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mb-8">
+        <h3 class="font-bold text-gray-700 mb-4 border-b pb-2">Customer Documents</h3>
+        <div class="flex flex-wrap gap-4">
+          <a *ngFor="let doc of selectedPolicy.documents" 
+             [href]="'https://localhost:7027/' + doc.filePath" target="_blank"
+             class="p-4 border rounded-xl hover:border-[#75013f] transition-all flex items-center gap-3">
+            <span class="text-2xl">📄</span>
+            <div>
+              <p class="text-xs font-bold text-[#75013f]">{{ doc.documentCategory }}</p>
+              <p class="text-[10px] text-gray-400">Click to view file</p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

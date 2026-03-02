@@ -1,0 +1,64 @@
+<div class="p-6 font-lato">
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-[#75013f]">Policy Management</h1>
+    <p class="text-gray-500 text-sm">Monitor all customer policies and assign agents for verification</p>
+  </div>
+
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    <table class="w-full text-left">
+      <thead class="bg-gray-50 border-b">
+        <tr class="text-[#75013f] text-sm font-bold uppercase">
+          <th class="px-6 py-4">Policy Number</th>
+          <th class="px-6 py-4">Customer</th>
+          <th class="px-6 py-4">Premium</th>
+          <th class="px-6 py-4">Current Agent</th>
+          <th class="px-6 py-4 text-right">Assign Agent</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-50">
+        <tr *ngFor="let policy of policies" class="hover:bg-gray-50 transition-colors">
+          <td class="px-6 py-4">
+            <span class="font-mono font-bold text-gray-700">{{ policy.policyNumber }}</span>
+            <p class="text-[10px] text-gray-400">Created: {{ policy.createdAt | date:'short' }}</p>
+          </td>
+          <td class="px-6 py-4">
+            <p class="font-bold">{{ policy.customerName }}</p>
+            <span class="text-xs px-2 py-0.5 rounded bg-blue-50 text-blue-600 font-bold uppercase">
+              {{ policy.status }}
+            </span>
+          </td>
+          <td class="px-6 py-4 font-semibold text-[#75013f]">
+            ₹{{ policy.totalPremiumAmount | number }}
+          </td>
+          <td class="px-6 py-4">
+            <div *ngIf="policy.agentName" class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-green-500"></span>
+              <span class="text-sm font-medium">{{ policy.agentName }}</span>
+            </div>
+            <span *ngIf="!policy.agentName" class="text-red-500 text-xs font-bold italic">Unassigned</span>
+          </td>
+<td class="px-6 py-4 text-right">
+  <select 
+    [disabled]="!!policy.agentName"
+    (change)="onAssignAgent(policy.id, $event)"
+    [class]="!!policy.agentName ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'"
+    class="text-xs p-2 border rounded-lg outline-none focus:border-[#fe3082] transition-all">
+    
+    <option value="">{{ policy.agentName ? policy.agentName : 'Choose Agent...' }}</option>
+    
+    <ng-container *ngIf="!policy.agentName">
+      <option *ngFor="let agent of agents" [value]="agent.id">
+        {{ agent.name }}
+      </option>
+    </ng-container>
+  </select>
+</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="loading" class="p-10 text-center text-[#75013f] font-bold">
+      Fetching policies...
+    </div>
+  </div>
+</div>
